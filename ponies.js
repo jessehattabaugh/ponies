@@ -6,14 +6,6 @@ exports.register = register;
 exports.render = yo;
 
 function register(def) {
-  /** def = { 
-    render() { return vtree },
-    is (string): the tagName of an HTML element to inherit from, defaults to 'div',
-    created() { called after the element is created },
-    attached() { called after the element is attached to the dom },
-    changed(attrName, oldVal, newVal) { called after the element's attributes have changed },
-    detached() { called after the element is detached },
-  } */
   
   if (typeof def !== 'object') {
     throw new Error("Definition param must be an object");
@@ -22,7 +14,7 @@ function register(def) {
     throw new Error("Definition object must have a render method");
   }
   
-  // Get the tagName of the vnode returned from render() 
+  // Get the tagName of the root node returned from render() 
   // since we are doing this before an element is instantiated we bind to a blank element
   let el = def.render.bind(document.createElement('DIV'))();
   if (!el instanceof HTMLElement) {
@@ -38,7 +30,7 @@ function register(def) {
   class CustomElement extends HTMLElement {
     
     update() {
-      console.info(tagName + " updated");
+      //console.info(tagName + " updated");
       yo.update(this, this.render());
     }
     
@@ -48,17 +40,18 @@ function register(def) {
     }
     
     attachedCallback() {
-      console.info(tagName + " attached");
+      //console.info(tagName + " attached");
       this.update();
       this.isAttached = true;
       if (this.attached) this.attached();
     }
     
     attributeChangedCallback(attrName, oldVal, newVal) {
-      //console.dir(arguments);
+      //console.info(`${tagName}'s ${attrName} changed from ${oldVal} to ${newVal}`);
+      
+      // don't update unattached elements
       if (!this.isAttached) return;
-      //console.log(this);
-      console.info(`${tagName}'s ${attrName} changed from ${oldVal} to ${newVal}`);
+      
       this.update();
       if (this.changed) this.changed(attrName, oldVal, newVal);
     }
