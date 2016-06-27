@@ -25,6 +25,7 @@
   "devDependencies": {
     "budo": "^8.3.0",
     "document-register-element": "^0.5.4",
-    "tape": "^4.6.0"
+    "tape": "^4.6.0",
+    "yo-yo": "^1.2.1"
   }
 }

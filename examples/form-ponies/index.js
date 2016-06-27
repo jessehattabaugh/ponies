@@ -1,0 +1,1 @@
+exports.button = require('./lib/button');
