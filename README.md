@@ -1,6 +1,6 @@
 # ponies 🐎🐎🐎
 
-My little library for creating [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components) that automatically update when their attributes change. It's powered by [yo-yo](https://npmjs.org/yo-yo) which uses [morphdom](https://npmjs.org/morphdom) for DOM Diffing, and [bel](https://npmjs.org/bel) for creating DOM elements from [tagged template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_template_literals). It's lightweight so you can use it to create libraries that other people can easily add to their pages.
+My little library for creating [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components) that automatically update when their attributes change. It's lightweight so you can use it to create libraries that other people can easily add to their pages.
 
 ## Basic Example
 
