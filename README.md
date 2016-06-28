@@ -1,39 +1,67 @@
-# ponies
+# ponies 🐎🐎🐎
 
-My little framework for registering CustomElements that use Virtual-DOM.
+My little library for creating [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components) that automatically update when their attributes change. It's lightweight so you can use it to create libraries that other people can easily add to their pages.
 
-## intallation
+## Basic Example
 
-```shell
-$npm install ponies
-```
+```js
+const ponies = require('ponies');
 
-## usage
-
-```es6
-const register = require('ponies').register;
-const h = require('ponies').h;
-
-register({
+ponies.register({
   render() {
-    h('my-little-component', [
-      h('h1', 'Hello ' + this.getAttribute('you') || 'World'),
-      h('input', {
-        onkeyup: ev => this.setAttribute('you', ev.target.value)
-      })
-    ])
+    return ponies.render`
+      <my-little-component>
+        <h1>Hello ${this.getAttribute('you') || "World"}</h1>
+        <input onkeyup=${ev => this.setAttribute('you', ev.target.value)}/>
+      </my-little-component>
+    `;
   }
 });
 ```
 
-Then use it like you would any other HTML element.
+Note that the root element must have a dash in it's tagName. Then use it like you would any other HTML element.
 
 ```html
 <my-little-component you="Jesse"></my-little-component>
 ```
 
-Whenever the element's attributes change the render function gets called again and the element's DOM gets patched with changes.
+Whenever the element's attributes change the render function gets called again and the element's DOM gets transformed to match the new result.
 
-## 'register(definition)'
+## Lifecycle Callbacks
 
-This function creates a subclass of HTMLElement, appends all the properties of the definition object to it
+[Custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements) often need to do setup when they are first created or attached to the DOM, clean up after they are detached, or perform custom tasks when their attributes are changed. [Lifecycle callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements#Lifecycle_callbacks) are functions that you provide to handle these events. Ponies assigns these functions to every instance of your component, so you can refer to the current element using `this`.
+
+```js
+ponies.register({
+  render() {
+    return ponies.render`
+      <log-component>
+        <ul>
+          ${this.logs.map(val => ponies.render`<li>${val}</li>`)}
+        </ul>
+      </log-component>
+    `;
+  }
+  attached() {
+    this.interval = window.setInterval(() => {
+      this.logs.push(new Date());
+      this.update();
+    }, 1000);
+  },
+  detached() {
+    window.clearInterval(this.interval);
+  }
+});
+```
+
+## Styling
+
+Ponies registers [Custom Elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements), but it doesn't use [Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Shadow_DOM). This means that the style of your components can be affected by the stylesheet of the page. You can style your components using style attributes which have high specificity, but these can still be overridden with `!important`.
+
+## Polyfilling
+
+Native support for [Custom Elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements) has been present in Chrome since 2014. [Firefox](https://platform-status.mozilla.org/#custom-elements), and [WebKit](https://webkit.org/status/#feature-custom-elements) support is in development. [Edge](https://developer.microsoft.com/en-us/microsoft-edge/platform/status/customelements) support is in consideration. In the mean time it is advised to use [a polyfill for document.registerElement](https://www.npmjs.com/package/document-register-element). 
+
+## Transpiling
+
+ES2015 features including template literals, classes, and `Object.assign` are used with aplomb. [You know what to do](https://babeljs.io/).

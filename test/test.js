@@ -1,24 +1,22 @@
-'use strict';
-
 const test = require('tape');
 const p = require('../ponies').register;
-const h = require('../ponies').h;
+const h = require('../ponies').render;
+
+const $ = document.getElementById.bind(document);
 
 // polyfills
 require('document-register-element');
 
 // one
 test("Exports the right stuff", function (t) {
-  let testP = require('../ponies').register;
-  let testH = require('../ponies').h;
   t.plan(2);
-  t.equal(typeof testR, 'function');
-  t.equal(testH('div').tagName, 'DIV');
+  t.equal(typeof p, 'function');
+  t.equal(h`<div>`.tagName, 'DIV');
 });
 
 // two 
-test("Throws exceptions on invalid arguments", function (t) {
-  t.plan(7);
+test("Throws exceptions on invalid definition", function (t) {
+  t.plan(6);
   t.throws(function () {
     p();
   }, "no arguments");
@@ -26,45 +24,40 @@ test("Throws exceptions on invalid arguments", function (t) {
     p({});
   }, "no render property");
   t.throws(function () {
-    p({render: 'string'});
+    p({render: 'invalid'});
   }, "render property not a function");
   t.throws(function () {
-    p({render() {return 'string';}});
-  }, "render function doesn't return a vtree");
+    p({render() {return 'invalid';}});
+  }, "render function doesn't return a node");
   t.throws(function () {
-    p({render() {return h();}});
-  }, "must have a name");
-  t.throws(function () {
-    p({render() {return h('aaaaaaaaaa');}});
-  }, "tagName must contain a dash");
-  t.doesNotThrow(function () {
-    p({render() {return h('el-two-d');}});
-  }, "acceptable arguments don't throw an error");
+    p({render() {return h`<invalid>`;}});
+  }, "root element tagName must contain a dash");
+  t.doesNotThrow(() => {
+    p({render() {return h`<el-two>`;}});
+  }, "acceptable definition doesn't throw an error");
 });
 
 // three
 test("Replaces a Custom Element's DOM with a VDOM", function (t) {
   t.plan(3);
-  t.equal(document.getElementById('id-three-old').tagName, 'DIV');
+  t.equal($('id-three-old').tagName, 'DIV');
   p({
-    render() {
-      return h('el-three', [
-        h('#id-three-new')
-      ]);
+    render() { 
+      return h`<el-three><div id="id-three-new"></div></el-three>`;
     }
   });
-  t.equal(document.getElementById('id-three-old'), null);
-  t.equal(document.getElementById('id-three-new').tagName, 'DIV');
+  t.equal($('id-three-old'), null);
+  t.equal($('id-three-new').tagName, 'DIV');
 });
 
 // four
-test("Created callback is executed", function (t) {
+test("Attached callback is executed", function (t) {
   t.plan(1);
   p({
     render() {
-      return h('el-four');
+      return h`<el-four>`;
     },
-    created() {
+    attached() {
       t.pass("callback called");
     }
   });
@@ -77,12 +70,10 @@ test("Render function can use attributes of element to render", function (t) {
   p({
     render() {
       let textFive = this.attributes['att-five'] ? this.attributes['att-five'].value: 'val-null';
-      return h('el-five', [
-        h('#id-five', textFive)
-      ]);
+      return h`<el-five><div id='id-five'>${textFive}</div></el-five>`;
     }
   });
-  t.equal(document.getElementById('id-five').innerText, 'val-five');
+  t.equal($('id-five').innerText, 'val-five');
 });
 
 // six
@@ -90,16 +81,13 @@ test("Mutations of the element's attributes will trigger a render", function (t)
   t.plan(1);
   p({
     render() {
-      
       let textSix = this.attributes['att-six'] ? this.attributes['att-six'].value : 'val-null';
-      return h('el-six#id-six', [
-        h('#id-six-child', textSix)
-      ]);
+      return h`<el-six id="id-six">${textSix}</el-six>`;
     }
   });
-  document.getElementById('id-six').setAttribute('att-six', 'val-six');
+  $('id-six').setAttribute('att-six', 'val-six-new');
   // todo: if dom update takes too long this timeout interval might not work
   setTimeout(function () {
-    t.equal(document.getElementById('id-six-child').innerText, 'val-six');
+    t.equal($('id-six').innerText, 'val-six-new');
   }, 1000);
 });
