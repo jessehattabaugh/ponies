@@ -1,6 +1,6 @@
 # ponies 🐎🐎🐎
 
-My little library for creating [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components) that automatically update when their attributes change. It's lightweight so you can use it to create libraries that other people can easily add to their pages.
+My little library for creating [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components) that automatically update when their attributes change. The hard work is done by [yo-yo](https://www.npmjs.com/package/yo-yo) which uses [bel](https://www.npmjs.com/package/bel) to render [tagged template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_template_literals) as DOM elements, and [morphdom](https://www.npmjs.com/package/morphdom) which does DOM Diffing. It's lightweight so you can use it to create libraries that other people can easily add to their pages. 
 
 ## Basic Example
 
@@ -64,4 +64,4 @@ Native support for [Custom Elements](https://developer.mozilla.org/en-US/docs/We
 
 ## Transpiling
 
-ES2015 features including template literals, classes, and `Object.assign` are used with aplomb. [You know what to do](https://babeljs.io/).
+ES2015 features including [tagged template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_template_literals), classes, and `Object.assign` are used with aplomb. [You know what to do](https://babeljs.io/).
