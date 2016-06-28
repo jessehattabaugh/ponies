@@ -13,7 +13,9 @@
   "keywords": [
     "web-components",
     "components",
-    "custom-elements"
+    "custom-elements",
+    "dom-diffing",
+    "tagged-template-literals"
   ],
   "author": "Jesse Hattabaugh <arkanciscan@gmail.com>",
   "license": "Artistic-2.0",
@@ -21,11 +23,12 @@
     "url": "https://github.com/jessehattabaugh/ponies/issues"
   },
   "homepage": "https://github.com/jessehattabaugh/ponies#readme",
-  "dependencies": {},
+  "dependencies": {
+    "yo-yo": "^1.2.1"
+  },
   "devDependencies": {
     "budo": "^8.3.0",
     "document-register-element": "^0.5.4",
-    "tape": "^4.6.0",
-    "yo-yo": "^1.2.1"
+    "tape": "^4.6.0"
   }
 }
