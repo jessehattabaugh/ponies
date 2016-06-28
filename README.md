@@ -29,7 +29,7 @@ Whenever the element's attributes change the render function gets called again a
 
 ## Lifecycle Callbacks
 
-[Custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements) often need to do setup when they are first created or attached to the DOM, clean up after they are detached, or perform custom tasks when their attributes are changed. [Lifecycle callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements#Lifecycle_callbacks) are functions that you provide to handle these events. Ponies assigns these functions to every instance of your component, so you can refer to the current element using `this`.
+[Custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements) often need to do setup when they are first created or attached to the DOM, clean up after they are detached, or custom tasks when their attributes are changed. [Lifecycle callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements#Lifecycle_callbacks) are functions that you provide to handle these events. Ponies assigns these functions as methods of every instance of your component, so you can refer to the current element using `this`.
 
 ```js
 ponies.register({
